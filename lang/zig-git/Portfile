@@ -28,7 +28,7 @@ long_description    Zig is a general-purpose programming language designed for \
 
 homepage            https://ziglang.org/
 
-set llvm_version    19
+set llvm_version    20
 
 depends_lib-append  port:clang-${llvm_version} \
                     port:zstd
