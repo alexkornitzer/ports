@@ -4,8 +4,6 @@ PortSystem          1.0
 PortGroup           cmake 1.1
 PortGroup           legacysupport 1.1
 
-legacysupport.use_static  yes
-
 name                zig-git
 distname            zig-git
 dist_subdir         zig
@@ -19,7 +17,7 @@ revision            0
 categories          lang
 license             MIT
 maintainers         nomaintainer
-platforms           {darwin >= 20}
+platforms           {darwin >= 22}
 
 description         Zig programming language
 
@@ -29,21 +27,19 @@ long_description    Zig is a general-purpose programming language designed for \
 homepage            https://ziglang.org/
 
 set llvm_version    21
-
-depends_lib-append  port:clang-${llvm_version} \
-                    port:zstd
-depends_build-append \
-                    port:llvm-${llvm_version}
-
 set llvm_config     LLVM_CONFIG=llvm-config-mp-${llvm_version}
 
+depends_build-append  port:clang-${llvm_version} \
+                      port:llvm-${llvm_version}
+depends_lib-append  port:zstd
+
+legacysupport.use_static  yes
+
+configure.args-append -DZIG_STATIC_LLVM=ON
+
 compiler.whitelist  macports-clang-${llvm_version}
+
+cmake.install_rpath-append ${prefix}/libexec/llvm-${llvm_version}/lib
 cmake.module_path   ${prefix}/libexec/llvm-${llvm_version} \
                     ${prefix}
 cmake_share_module_dir ${prefix}/libexec/llvm-${llvm_version}
-
-configure.args-append \
-                    -DZIG_STATIC_LLVM=ON
-configure.pre_args-replace \
-                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=ON \
-                    -DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=OFF
